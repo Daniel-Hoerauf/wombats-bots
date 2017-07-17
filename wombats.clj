@@ -97,7 +97,7 @@
                       (and (< (:y self-node) (:y node)) (<= (:y node) (+ (:y self-node) arena-half)))
                       (or (> (:y node) (:y self-node)) (>= (- (:y self-node) arena-half) (:y node))))
               "w" (if (<= arena-half (:x self-node))
-                      (and (> (:x self-node) (:x node)) (>= (:x node) (- (:xa self-node) arena-half)))
+                      (and (> (:x self-node) (:x node)) (>= (:x node) (- (:x self-node) arena-half)))
                       (or (< (:x node) (:x self-node)) (>= (- (:x node) arena-half) (:x self-node))))
               "n" (if (<= arena-half (:y self-node))
                       (and (> (:y self-node) (:y node)) (>= (:y node) (- (:y self-node) arena-half)))
@@ -216,9 +216,10 @@
       "Take the best action to get to given space"
       ([arena dir loc self]
         (def ^:private orientations ["n" "e" "s" "w"])
-        (if (and (facing? dir loc self) (is-clear? arena (front-tile dir self)))
-            (build-resp :move)
-            (build-resp :turn (new-direction dir loc self))))
+        (cond
+            (nil? loc) (build-resp :move)
+            (and (facing? dir loc self) (is-clear? arena (front-tile dir self))) (build-resp :move)
+            :else (build-resp :turn (new-direction dir loc self))))
       ([arena dir loc]
         (move-to dir arena loc {:x 3 :y 3})))
 
